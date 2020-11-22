@@ -27,6 +27,7 @@ app.get("/", (req, res) => {
 app.post("/", (req, res) => {
   if (people.length <= 0) {
     res.sendStatus(402);
+    return;
   }
   console.log(req.body.santa);
   shuffle();

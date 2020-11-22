@@ -36,8 +36,9 @@
               class="form-control txt"
               id="santa"
               name="santa"
+              onkeyup="if(this.value.length > 0) document.getElementById('submit').disabled = false; else document.getElementById('submit').disabled = true;"
             />
-            <button type="submit" class="btn btn-danger">
+            <button id="submit" type="submit" class="btn btn-danger" disabled>
               A qui j'offre un 🎁
             </button>
           </div>

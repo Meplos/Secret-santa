@@ -39,8 +39,6 @@ app.listen(PORT, () => console.log("App listening"));
 
 function getNameAndRemove(name) {
   const popName = people.pop();
-  console.log(name);
-  console.log(people);
   if (popName.toLowerCase() === name.toLowerCase()) {
     people.push(popName);
     return getNameAndRemove(name);

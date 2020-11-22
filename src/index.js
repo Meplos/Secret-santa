@@ -25,6 +25,9 @@ app.get("/", (req, res) => {
 });
 
 app.post("/", (req, res) => {
+  if (people.length <= 0) {
+    res.sendStatus(402);
+  }
   console.log(req.body.santa);
   shuffle();
   const name = getNameAndRemove(req.body.santa);

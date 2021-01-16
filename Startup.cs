@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+
+using secretsanta.Model;
 namespace secretsanta
 {
     public class Startup
@@ -33,6 +35,7 @@ namespace secretsanta
                 endpoints.MapGet("/", async context =>
                 {
                     await context.Response.WriteAsync("Hello World!");
+                    Party party = new Party(DateTime.Now, 15, "EUR");
                     
                 });
             });

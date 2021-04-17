@@ -1,0 +1,22 @@
+version: "3.3"
+services: 
+    front: 
+        build: ./frontend
+        ports: 
+            - 8080:8080
+        restart: unless-stopped
+        volumes: 
+            - ./frontend:/usr/app/frontend
+    back: 
+        build: ./backend
+        ports: 
+            - 3000:3000
+        restart: unless-stopped
+        volumes: 
+            - ./backend:/usr/app/back
+    mongodb:
+        container_name: mongodb
+        image: mongo:latest
+        restart: always
+        ports:
+            - "27017:27017"

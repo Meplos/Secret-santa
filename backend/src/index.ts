@@ -1,9 +1,10 @@
-const app = require("express")();
-const ip = require("ip");
-
+import express from 'express';
+import ip from "ip";
 const PORT = 3000 || process.env.PORT;
 
-app.get('/', (req, res) => {
+const app = express();
+console.log("Hello world")
+app.get('/', (req , res) => {
     res.status(200).json({message: "Hello world 🖖"});
 });
 

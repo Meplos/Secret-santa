@@ -7,10 +7,6 @@ app.get('/', (req, res) => {
     res.status(200).json({message: "Hello world 🖖"});
 });
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 app.listen(PORT, () => {
     console.log('🖥️  Server listening... ');
     console.log(`\t 🏠 : http://localhost:${PORT}`);

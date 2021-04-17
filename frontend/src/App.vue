@@ -1,24 +1,5 @@
 <template>
   <div id="app">
-<<<<<<< Updated upstream
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
-</template>
-
-<script>
-import HelloWorld from './components/HelloWorld.vue'
-
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
-</script>
-
-<style>
-=======
     <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
@@ -28,16 +9,12 @@ export default {
 </template>
 
 <style lang="scss">
->>>>>>> Stashed changes
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-<<<<<<< Updated upstream
-  margin-top: 60px;
-=======
 }
 
 #nav {
@@ -51,6 +28,5 @@ export default {
       color: #42b983;
     }
   }
->>>>>>> Stashed changes
 }
 </style>

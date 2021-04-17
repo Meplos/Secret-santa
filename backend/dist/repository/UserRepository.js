@@ -16,9 +16,15 @@ const User_1 = __importDefault(require("../entity/User"));
 class UserRepository {
     createUser(email, firstname, password, lastip, birthdate, lastConnexion) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield User_1.default.create({ email, firstname, password, lastip, birthdate, lastConnexion });
+            let user;
+            user = yield User_1.default.create({ email, firstname, password, lastip, birthdate, lastConnexion });
             console.log(user);
             return user;
+        });
+    }
+    findOneBy(params) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield User_1.default.findOne(params);
         });
     }
 }

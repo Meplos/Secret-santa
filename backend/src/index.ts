@@ -1,18 +1,46 @@
 import express from 'express';
 import ip from "ip";
 import { connect } from 'mongoose';
+
+import passport from "passport";
+import {Strategy} from "passport-http-bearer";
+import jwt from "jwt-simple"
+import moment from "moment";
+
 import AuthController from './controller/AuthController';
 import UserRepository from './repository/UserRepository';
+
 const PORT = 3000 || process.env.PORT;
 
-const authController = new AuthController(new UserRepository());
 
+const userRepo = new UserRepository();
+const authController = new AuthController(userRepo);
+const SECRET = "SecretSanta"
+
+
+passport.use(new Strategy((token, done) => {
+
+    const decoded = jwt.decode(token, SECRET, false, "HS256");
+    if(moment().unix() > moment(decoded.exp).unix()) {
+        return done(null, false);
+    }
+
+    userRepo.findOneBy({_id: decoded._id}).then( user => {
+        if(!user) return done(null, false);
+        return done(null, user);
+    }) .catch(err => done(null, false));
+
+
+
+}));
+const app = express();
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
  (async () => {
     await connect("mongodb://mongodb:27017/test", {useNewUrlParser: true, useUnifiedTopology: true});
     const repo = new UserRepository();
     // repo.createUser("akqjdsmfl", "kjdqmsldf", "sdjkflqsd", `${ip.address()}`, new Date(), new Date());
 
-     const app = express();
      console.log("Hello world")
      app.get('/', (req, res) => {
          res.status(200).json({ message: "Hello world 🖖" });
@@ -20,14 +48,27 @@ const authController = new AuthController(new UserRepository());
 
     app.post("/signup", (req, res) => {
         const payload = req.body;
-        const userIp = req.headers['x-forwarded-for'][0];
-        authController.signup(payload,userIp);
+        const userIp = "127.0.0.1";
+
+        authController.signup(payload,userIp).then(({status, message}) => {
+            res.status(status).send({message});
+        });
     });
 
      app.post("/login", (req, res) => {
         const payload = req.body;
-        authController.login(payload);
 
+
+        authController.login(payload).then(
+            ({status, message}) => {
+                res.status(status).send({message});
+            }
+        );
+
+     });
+
+     app.get("/secure", passport.authenticate('bearer', {session: false}), (req, res) => {
+        res.sendStatus(200);
      });
 
      app.listen(PORT, () => {

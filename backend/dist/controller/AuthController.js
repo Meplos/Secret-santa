@@ -8,32 +8,58 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const jwt_simple_1 = __importDefault(require("jwt-simple"));
+const moment_1 = __importDefault(require("moment"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
 class AuthController {
     constructor(repos) {
         this.repos = repos;
     }
     login(payload) {
         return __awaiter(this, void 0, void 0, function* () {
-            const login = payload.login;
+            const email = payload.email;
             const passwd = payload.passwd;
+            const user = yield this.repos.findOneBy({ email });
+            if (user) {
+                const match = yield bcrypt_1.default.compare(passwd, user.password);
+                if (match) {
+                    const token = jwt_simple_1.default.encode({ _id: user._id, exp: moment_1.default().add(1, 'hour') }, "SecretSanta", "HS256");
+                    return { status: 200, message: token };
+                }
+                else {
+                    return { status: 401, error: "Unauthorized" };
+                }
+            }
+            else {
+                return { status: 403, error: "Invalid input" };
+            }
         });
     }
     signup(payload, userIp) {
         return __awaiter(this, void 0, void 0, function* () {
             let status = 500;
-            const message = {};
+            let message = {};
             const firstname = payload.firstname;
             const email = payload.email;
             const birthdate = new Date(payload.birthdate);
             const passwd = payload.passwd;
             const ip = userIp;
             const lastConnexion = new Date();
-            // TODO: Hash the passwd see with Bearer and passport
-            const user = yield this.repos.createUser(email, firstname, passwd, ip, birthdate, lastConnexion);
+            console.log(passwd);
+            const hash = yield bcrypt_1.default.hash(passwd, 10);
+            const user = yield this.repos.createUser(email, firstname, hash, ip, birthdate, lastConnexion);
             if (user) {
                 status = 200;
-                // TODO: génerate token
+                const token = jwt_simple_1.default.encode({ _id: user._id, exp: moment_1.default().add(1, 'hour') }, "SecretSanta", "HS256");
+                message = token;
+            }
+            else {
+                status = 401;
+                message = "Unauthorized";
             }
             return { status, message };
         });

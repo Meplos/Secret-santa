@@ -1,15 +1,37 @@
 <template>
-  <div id="app">
-    <log-in/>    
+  <div id="app" >
+    <v-app>
+      <v-app-bar color="primary" dense short dark app>
+        <v-toolbar-title class="app__title">🎅{{ $appName }}</v-toolbar-title>
+      </v-app-bar>
+      <v-content>
+        <v-container>
+          <router-view/>
+        </v-container>
+      </v-content>
+
+        <v-footer padless>
+      <v-col
+        class="text-center"
+        cols="12"
+      >
+          <v-spacer></v-spacer>
+        {{ new Date().getFullYear() }} — <strong>Alexandre Erard</strong>
+      <v-spacer></v-spacer>
+      <v-icon>mdi-github</v-icon>
+      </v-col>
+    </v-footer>
+    </v-app>
   </div>
 </template>
 <script>
-import LogIn from './views/LogIn.vue'
 export default {
   components: {
-    LogIn
-  }
-}
+  },
+  data: () => ({
+    collapseOnScroll: false,
+  }),
+};
 </script>
 <style lang="scss">
 #app {
@@ -17,19 +39,11 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
 }
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+.app__title {
+  font-size: 24pt !important;
+  font-weight: 800;
 }
+
 </style>

@@ -7,9 +7,9 @@ import axios from "axios"
 Vue.config.productionTip = false
 
 Vue.prototype.$appName = "Secret Santa"
-Vue.prototype.$axios = axios;
 
 new Vue({
+  axios,
   vuetify,
   router,
   store,

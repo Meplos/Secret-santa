@@ -2,6 +2,7 @@ import express from 'express';
 import ip from "ip";
 import { connect } from 'mongoose';
 
+import cors from 'cors';
 import passport from "passport";
 import {Strategy} from "passport-http-bearer";
 import jwt from "jwt-simple"
@@ -36,6 +37,8 @@ passport.use(new Strategy((token, done) => {
 const app = express();
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
+
+app.use(cors());
  (async () => {
     await connect("mongodb://mongodb:27017/test", {useNewUrlParser: true, useUnifiedTopology: true});
     const repo = new UserRepository();

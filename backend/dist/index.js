@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const ip_1 = __importDefault(require("ip"));
 const mongoose_1 = require("mongoose");
+const cors_1 = __importDefault(require("cors"));
 const passport_1 = __importDefault(require("passport"));
 const passport_http_bearer_1 = require("passport-http-bearer");
 const jwt_simple_1 = __importDefault(require("jwt-simple"));
@@ -39,6 +40,7 @@ passport_1.default.use(new passport_http_bearer_1.Strategy((token, done) => {
 const app = express_1.default();
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());
+app.use(cors_1.default());
 (() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.connect("mongodb://mongodb:27017/test", { useNewUrlParser: true, useUnifiedTopology: true });
     const repo = new UserRepository_1.default();

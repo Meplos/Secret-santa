@@ -3,7 +3,7 @@
     <v-row justify="center">
       <v-spacer></v-spacer>
       <div class="secondary login__container">
-        <h2 class="login__title"><v-icon large>mdi-account</v-icon>Log in</h2>
+        <h2 class="login__title"><v-icon large>fas fa-user</v-icon>Log in</h2>
         <v-form ref="loginForm" class="login__form">  
           <v-col cols="sm-12  ">
             <v-text-field

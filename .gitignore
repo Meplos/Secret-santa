@@ -10,6 +10,7 @@ node_modules
 *.dll.config
 *.cache
 *.suo
+*.js*
 # Include dlls if they’re in the NuGet packages directory
 !/packages/*/lib/*.dll
 !/packages/*/lib/*/*.dll

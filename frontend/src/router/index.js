@@ -1,21 +1,43 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import login from '../views/LogIn.vue'
+import AuthApp from '../views/AuthApp.vue'
+import Login from '../views/LogIn.vue'
 import CreateAccount from '../views/CreateAccount.vue'
+import store from "../store/index"
 Vue.use(VueRouter)
+
+function isAuth() {
+  return store.state.token
+}
+
+function authCheck(to, from, next) {
+  if (isAuth()) {
+    next()
+  }
+  else {
+    next({ name: 'Login' })
+  }
+}
+
 
 const routes = [
   {
-    path:'/login',
+    path: '/login',
     name: 'Login',
-    component: login
+    component: Login
   },
   {
     path: '/createAccount',
     name: 'CreateAccount',
     component: CreateAccount
+  },
+  {
+    path: '/',
+    name: 'AuthApp',
+    component: AuthApp,
+    beforeEnter: authCheck
   }
-  
+
 ]
 
 

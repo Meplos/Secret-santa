@@ -2,57 +2,67 @@ import UserRepository from "../repository/UserRepository";
 import jwt from "jwt-simple"
 import moment from "moment";
 import bcrypt from "bcrypt";
+import { IUser } from "../entity/User"
+import BaseController from "../interface/BaseController";
+import { getReasonPhrase, StatusCodes } from "http-status-codes";
 
-export default class AuthController {
-    private repos: UserRepository;
-    public constructor(repos: UserRepository) {
-        this.repos = repos;
+export default class AuthController extends BaseController {
+
+    public constructor(repo: UserRepository) {
+        super(repo);
     }
 
 
     public async login(payload: any) {
         const email = payload.email;
 
-        const passwd = payload.passwd;
-        const user = await this.repos.findOneBy({email});
-        if(user) {
-            const match = await bcrypt.compare(passwd, user.password)
+        const password = payload.password;
+        const user = await this.repo.findOneBy({ email });
+        if (user) {
+            const match = await bcrypt.compare(password, user.password)
             if (match) {
                 const token = jwt.encode({ _id: user._id, exp: moment().add(1, 'hour') }, "SecretSanta", "HS256");
-                return { status: 200, message: token };
+                return { status: StatusCodes.OK, message: token };
             } else {
-                return { status: 401, error: "Unauthorized" };
+                return { status: StatusCodes.UNAUTHORIZED, error: getReasonPhrase(StatusCodes.UNAUTHORIZED) };
             }
 
         } else {
-            return {status: 403, error: "Invalid input"};
+            return {
+                status: StatusCodes.BAD_REQUEST,
+                error: getReasonPhrase(StatusCodes.BAD_REQUEST)
+            };
         }
 
 
     }
 
-    public async signup(payload: any, userIp: string) {
-        let status = 500;
-        let message = {};
-        const firstname = payload.firstname;
-        const email = payload.email;
-        const birthdate = new Date(payload.birthdate);
-        const passwd = payload.passwd;
-
+    /**
+     * Create an account in database
+     * @param firstname
+     * @param email
+     * @param birthdate
+     * @param password
+     * @param userIp
+     * @returns
+     */
+    public async signup({ firstname, email, birthdate, password }: IUser, userIp: string) {
+        let status = StatusCodes.INTERNAL_SERVER_ERROR;
+        let message = '';
         const ip = userIp;
-        const lastConnexion = new Date();
-        console.log(passwd);
+        const lastConnexion = moment().format("YYYY-MM-DD");
+        console.log(password);
 
-        const hash = await bcrypt.hash(passwd, 10);
+        const hash = await bcrypt.hash(password, 10);
 
         const user = await this.repos.createUser(email, firstname, hash, ip, birthdate, lastConnexion);
         if (user) {
-            status = 200;
-            const token = jwt.encode({_id: user._id, exp: moment().add(1, 'hour')}, "SecretSanta", "HS256");
+            status = StatusCodes.CREATED;
+            const token = jwt.encode({ _id: user._id, email: user.email, exp: moment().add(1, 'hour') }, "SecretSanta", "HS256");
             message = token;
         } else {
-            status = 401;
-            message = "Unauthorized";
+            status = StatusCodes.BAD_REQUEST;
+            message = getReasonPhrase(StatusCodes.BAD_REQUEST);
         }
 
         return { status, message }

@@ -5,8 +5,8 @@ const UserSchema = new Schema({
     firstname: { type: String, required: true },
     password: {type: String, required: true},
     lastip: {type: String, required: true},
-    birthdate: {type: Date, require: true},
-    lastConnexion: {type: Date, require: true},
+    birthdate: {type: String, require: true},
+    lastConnexion: {type: String, require: true},
 });
 
 export interface IUser extends Document {
@@ -14,8 +14,8 @@ export interface IUser extends Document {
     firstname: string,
     password: string,
     lastip: string,
-    birthdate: Date,
-    lastConnexion: Date,
+    birthdate: string,
+    lastConnexion: string,
 
 }
 

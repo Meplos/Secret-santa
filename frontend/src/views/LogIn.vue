@@ -3,14 +3,16 @@
     <v-row justify="center">
       <v-spacer></v-spacer>
       <div class="secondary login__container">
-        <h2 class="login__title"><v-icon large>fas fa-user</v-icon>Log in</h2>
+        <h2 class="login__title"><v-icon large class="mr-2" color="#000000">fas fa-user</v-icon>Log in</h2>
         <v-form ref="loginForm" class="login__form">  
           <v-col cols="sm-12  ">
+            
             <v-text-field
               label="Email"
               v-model="email"
               :rules="[rules.emailMatch]"
             ></v-text-field>
+
             <v-text-field
               label="Password"
               v-model="password"
@@ -21,6 +23,7 @@
               counter
               @click:append="showPassword = !showPassword"
             ></v-text-field>
+            
             <v-btn class="submit" color="primary" @click="submit($event)">
               Log in
             </v-btn>

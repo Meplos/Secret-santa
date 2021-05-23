@@ -2,21 +2,26 @@ import UserRepository from "../repository/UserRepository";
 import jwt from "jwt-simple"
 import moment from "moment";
 import bcrypt from "bcrypt";
-import { IUser } from "../entity/User"
+import { BaseUser } from "../entity/User"
 import BaseController from "../interface/BaseController";
 import { getReasonPhrase, StatusCodes } from "http-status-codes";
 
-export default class AuthController extends BaseController {
+export default class AuthController extends BaseController<UserRepository> {
 
     public constructor(repo: UserRepository) {
         super(repo);
     }
 
 
-    public async login(payload: any) {
-        const email = payload.email;
+    /**
+     *
+     * @param email
+     * @param password
+     * @returns
+     */
 
-        const password = payload.password;
+    public async login({ email, password }: BaseUser) {
+
         const user = await this.repo.findOneBy({ email });
         if (user) {
             const match = await bcrypt.compare(password, user.password)
@@ -24,7 +29,7 @@ export default class AuthController extends BaseController {
                 const token = jwt.encode({ _id: user._id, exp: moment().add(1, 'hour') }, "SecretSanta", "HS256");
                 return { status: StatusCodes.OK, message: token };
             } else {
-                return { status: StatusCodes.UNAUTHORIZED, error: getReasonPhrase(StatusCodes.UNAUTHORIZED) };
+                return { status: StatusCodes.BAD_REQUEST, error: getReasonPhrase(StatusCodes.BAD_REQUEST) };
             }
 
         } else {
@@ -46,7 +51,7 @@ export default class AuthController extends BaseController {
      * @param userIp
      * @returns
      */
-    public async signup({ firstname, email, birthdate, password }: IUser, userIp: string) {
+    public async signup({ firstname, email, birthdate, password }: BaseUser, userIp: string) {
         let status = StatusCodes.INTERNAL_SERVER_ERROR;
         let message = '';
         const ip = userIp;
@@ -54,8 +59,7 @@ export default class AuthController extends BaseController {
         console.log(password);
 
         const hash = await bcrypt.hash(password, 10);
-
-        const user = await this.repos.createUser(email, firstname, hash, ip, birthdate, lastConnexion);
+        const user = await this.repo.createUser(email, firstname, hash, ip, birthdate, lastConnexion);
         if (user) {
             status = StatusCodes.CREATED;
             const token = jwt.encode({ _id: user._id, email: user.email, exp: moment().add(1, 'hour') }, "SecretSanta", "HS256");

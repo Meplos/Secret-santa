@@ -6,10 +6,11 @@ import {
 } from 'http-status-codes';
 import Repository from './Repository';
 
-export default class BaseController {
+export default class BaseController<T extends Repository> {
 
-    protected repo: Repository;
-    constructor(repo: Repository) {
+    protected repo: T;
+    constructor(repo: T) {
         this.repo = repo;
     }
+
 }

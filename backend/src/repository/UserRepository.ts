@@ -2,15 +2,15 @@ import moment from 'moment';
 import User, { IUser } from '../entity/User'
 import Repository from '../interface/Repository'
 
-export default class UserRepository extends Repository {
+export default class UserRepository implements Repository {
 
     public async createUser(
         email: string,
         firstname: string,
         password: string,
         lastip: string,
-        birthdate: Date,
-        lastConnexion: Date) {
+        birthdate: string,
+        lastConnexion: string) {
         let user: IUser;
         user = await User.create({ email, firstname, password, lastip, birthdate, lastConnexion });
         console.log(user);

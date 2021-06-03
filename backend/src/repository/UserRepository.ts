@@ -21,10 +21,9 @@ export default class UserRepository implements Repository {
         return await User.findOne(params);
     }
 
-    public async updateUserConnectionInfo(email: string, ip: string) {
-        const user = await User.findOne({ email });
-        user.lastip = ip;
-        user.lastConnexion = moment().format('YYYY-MM-DD')
+    public async updateUserConnectionInfo(user: IUser, ip: string) {
+        const lastConnexion = moment().format('YYYY-MM-DD');
+        User.updateOne({ _id: user._id }, { latestip: ip, lastConnexion })
     }
 
     public async findBy(params: any) {

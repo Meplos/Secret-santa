@@ -12,7 +12,6 @@ export default class AuthController extends BaseController<UserRepository> {
         super(repo);
     }
 
-
     /**
      *
      * @param email
@@ -20,13 +19,14 @@ export default class AuthController extends BaseController<UserRepository> {
      * @returns
      */
 
-    public async login({ email, password }: BaseUser) {
+    public async login({ email, password, lastip }: BaseUser) {
 
         const user = await this.repo.findOneBy({ email });
         if (user) {
             const match = await bcrypt.compare(password, user.password)
             if (match) {
-                const token = jwt.encode({ _id: user._id, exp: moment().add(1, 'hour') }, "SecretSanta", "HS256");
+                this.repo.updateUserConnectionInfo(user, lastip);
+                const token = jwt.encode({ _id: user._id, email: user.email, latestip: user.lastip, lastConnexion: user.lastConnexion, exp: moment().add(1, 'hour') }, "SecretSanta", "HS256");
                 return { status: StatusCodes.OK, message: token };
             } else {
                 return { status: StatusCodes.BAD_REQUEST, error: getReasonPhrase(StatusCodes.BAD_REQUEST) };
@@ -51,10 +51,10 @@ export default class AuthController extends BaseController<UserRepository> {
      * @param userIp
      * @returns
      */
-    public async signup({ firstname, email, birthdate, password }: BaseUser, userIp: string) {
+    public async signup({ firstname, email, birthdate, password, lastip }: BaseUser, ) {
         let status = StatusCodes.INTERNAL_SERVER_ERROR;
         let message = '';
-        const ip = userIp;
+        const ip = lastip;
         const lastConnexion = moment().format("YYYY-MM-DD");
         console.log(password);
 
@@ -62,7 +62,7 @@ export default class AuthController extends BaseController<UserRepository> {
         const user = await this.repo.createUser(email, firstname, hash, ip, birthdate, lastConnexion);
         if (user) {
             status = StatusCodes.CREATED;
-            const token = jwt.encode({ _id: user._id, email: user.email, exp: moment().add(1, 'hour') }, "SecretSanta", "HS256");
+            const token = jwt.encode({ _id: user._id, email: user.email, latestip: user.lastip, lastConnexion: user.lastConnexion, exp: moment().add(1, 'hour') }, "SecretSanta", "HS256");
             message = token;
         } else {
             status = StatusCodes.BAD_REQUEST;

@@ -1,33 +1,29 @@
 <template>
-  <div id="app" >
+  <div id="app">
     <v-app>
       <v-app-bar color="primary" dense short dark app>
         <v-toolbar-title class="app__title">🎅{{ $appName }}</v-toolbar-title>
       </v-app-bar>
-      <v-content>
+      <v-main>
         <v-container>
-          <router-view/>
+          <router-view />
         </v-container>
-      </v-content>
+      </v-main>
 
-        <v-footer padless>
-      <v-col
-        class="text-center"
-        cols="12"
-      >
+      <v-footer padless>
+        <v-col class="text-center" cols="12">
           <v-spacer></v-spacer>
-        {{ new Date().getFullYear() }} — <strong>Alexandre Erard</strong>
-      <v-spacer></v-spacer>
-      <v-icon>mdi-github</v-icon>
-      </v-col>
-    </v-footer>
+          {{ new Date().getFullYear() }} — <strong>Alexandre Erard</strong>
+          <v-spacer></v-spacer>
+          <v-icon>mdi-github</v-icon>
+        </v-col>
+      </v-footer>
     </v-app>
   </div>
 </template>
 <script>
 export default {
-  components: {
-  },
+  components: {},
   data: () => ({
     collapseOnScroll: false,
   }),
@@ -45,5 +41,4 @@ export default {
   font-size: 24pt !important;
   font-weight: 800;
 }
-
 </style>
